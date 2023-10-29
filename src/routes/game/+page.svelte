@@ -81,16 +81,7 @@
 			let rightHandX = parseInt(rightHand!.style.left.replace('px', ''));
 			let rightHandY = parseInt(rightHand!.style.top.replace('px', ''));
 
-			let distance = Math.sqrt(
-				Math.pow(leftHandX - rightHandX, 2) + Math.pow(leftHandY - rightHandY, 2)
-			);
-
-			if (
-				leftHandX + 25 > rightHandX - 25 &&
-				leftHandX - 25 < rightHandX + 25 &&
-				leftHandY + 25 > rightHandY - 25 &&
-				leftHandY - 25 < rightHandY + 25
-			) {
+			if (leftHandX === rightHandX && leftHandY + 1 === rightHandY) {
 				gameTimer += 1;
 				update(ref(db, '/'), {
 					timer: gameTimer
