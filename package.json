@@ -1,5 +1,5 @@
 {
-	"name": "harvest-site",
+	"name": "harvest-hackathon-game",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -32,6 +32,7 @@
 	"dependencies": {
 		"@sveltejs/adapter-vercel": "^3.0.3",
 		"@upstash/redis": "^1.24.1",
+		"@vercel/analytics": "^1.1.1",
 		"firebase": "^10.5.2",
 		"open-props": "^1.6.10",
 		"partysocket": "0.0.12",

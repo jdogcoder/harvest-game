@@ -1,9 +1,14 @@
 <script>
+	import { dev } from '$app/environment';
+	import { inject } from '@vercel/analytics';
+
+	inject({ mode: dev ? 'development' : 'production' });
+
 	import '../global.css';
 </script>
 
 <svelte:head>
-	<title>SvelteKit Edge Guest Book</title>
+	<title>Harvest Hackathon Game</title>
 </svelte:head>
 
 <main>

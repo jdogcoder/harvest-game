@@ -11,7 +11,7 @@
 </script>
 
 <div class="box">
-	<h1 class="title">Harvest Teamwork Challange</h1>
+	<h1 class="title">Harvest Hackathon Game</h1>
 
 	{#if form?.signed}
 		<!-- redirect to /game -->
