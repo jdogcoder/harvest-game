@@ -1,4 +1,3 @@
-<!-- Hello world -->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { initializeApp } from 'firebase/app';
@@ -6,12 +5,14 @@
 
 	import type { PageData } from './$types';
 
-	import { page } from '$app/stores';
+	export let data: PageData;
 
 	// Initialize Firebase
-	const app = initializeApp($page.data.firebaseConfig);
+	const app = initializeApp(data.firebaseConfig);
 	// Initialize Realtime Database and get a reference to the service
 	const db = getDatabase(app);
+
+	let gameUuid = data.gameUuid;
 
 	// Set up important game variables.
 	let currentHand = '';
@@ -19,8 +20,26 @@
 	let gameTimer = 0;
 
 	onMount(async () => {
-		// Set the game state to the current state in the database.
-		let gameState = (await get(ref(db, '/'))).val();
+		// Set the game state to the current state in the database if it exists, otherwise set it to the default state and then set that to the db.
+		let gameState = (await get(ref(db, `/${gameUuid}/`))).val();
+
+		if (!gameState) {
+			gameState = {
+				leftHand: {
+					x: Math.floor(Math.random() * 1000),
+					y: Math.floor(Math.random() * 1000),
+					sessionLastActive: new Date()
+				},
+				rightHand: {
+					x: Math.floor(Math.random() * 1000),
+					y: Math.floor(Math.random() * 1000),
+					sessionLastActive: new Date()
+				},
+				timer: 0
+			};
+
+			update(ref(db, `/${gameUuid}/`), gameState);
+		}
 
 		// Set the current hand to the one that was not last active, and the other hand to the one that was last active.
 		currentHand =
@@ -81,19 +100,58 @@
 			let rightHandX = parseInt(rightHand!.style.left.replace('px', ''));
 			let rightHandY = parseInt(rightHand!.style.top.replace('px', ''));
 
-
 			// console.log("left hand", leftHandX, leftHandY);
 			// console.log("right hand", rightHandX, rightHandY);
 
 			if (leftHandX === rightHandX && leftHandY === rightHandY) {
 				gameTimer += 1;
-				update(ref(db, '/'), {
+				update(ref(db, `/${gameUuid}/`), {
 					timer: gameTimer
 				});
 			} else {
 				gameTimer = 0;
+				update(ref(db, `/${gameUuid}/`), {
+					timer: gameTimer
+				});
 			}
 		}, 500);
+
+		// if both hands are inactive for more than 2 minutes, reset the game timer, and reset the hands to random positions. (checks every minute)
+		setInterval(async () => {
+			let leftHandLastActive = new Date((await get(ref(db, `/${gameUuid}/leftHand/sessionLastActive`))).val());
+			let rightHandLastActive = new Date((await get(ref(db, `/${gameUuid}/rightHand/sessionLastActive`))).val());
+
+			if (
+				leftHandLastActive < new Date(Date.now() - 120000) &&
+				rightHandLastActive < new Date(Date.now() - 120000)
+			) {
+				// reset the game timer
+				gameTimer = 0;
+				update(ref(db, `/${gameUuid}/`), {
+					timer: gameTimer
+				});
+
+				// reset the hands to random positions
+				update(ref(db, `/${gameUuid}/leftHand/`), {
+					x: Math.floor(Math.random() * 1000),
+					y: Math.floor(Math.random() * 1000)
+				});
+				update(ref(db, `/${gameUuid}/rightHand/`), {
+					x: Math.floor(Math.random() * 1000),
+					y: Math.floor(Math.random() * 1000)
+				});
+			}
+		}, 60000);
+
+		// once the game timer reaches 20, end the game.
+		onValue(ref(db, `/${gameUuid}/timer`), (snapshot) => {
+			const data = snapshot.val();
+
+			if (data >= 20) {
+				// redirect both players to the game over page
+				window.location.href = '/gameover/' + gameUuid;
+			}
+		});
 	});
 </script>
 
@@ -124,8 +182,11 @@
 		left: 0px;
 	}
 
+	/* TODO: Add animation to make smoother */
 	#rightHand {
 		position: absolute;
+		top: 0px;
+		left: 0px;
 	}
 
 	:global(body) {

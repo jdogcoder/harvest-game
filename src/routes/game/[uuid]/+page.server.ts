@@ -8,9 +8,12 @@ import {
 	FIREBASE_CLIENT_EMAIL
 } from '$env/static/private';
 
-import type { PageServerLoad } from '../$types';
+import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load = (async ({ params }) => {
+
+	const gameUuid = params.uuid;
+
 	return {
 		// See: https://firebase.google.com/docs/web/learn-more#config-object
 		firebaseConfig: {
@@ -26,6 +29,7 @@ export const load: PageServerLoad = async ({ params }) => {
 			auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
 			client_x509_cert_url: FIREBASE_CLIENT_CERT_URL,
 			universe_domain: 'googleapis.com'
-		}
+		},
+		gameUuid: gameUuid
 	};
-};
+}) satisfies PageServerLoad;

@@ -1,41 +1,37 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { slide } from 'svelte/transition';
-	import type { ActionData, PageData } from './$types';
+	import { goto } from '$app/navigation';
 
-	export let data: PageData;
-	export let form: ActionData;
+	function joinExistingGame() {
+		goto('/lobby/existing');
+	}
 
-	const cities = data.visited.map((v) => v.city.split(', '));
-	const countries = [...new Set(cities.map((c) => c[1]))].sort();
+	function hostGame() {
+		goto('/lobby/new');
+	}
 </script>
 
 <div class="box">
 	<h1 class="title">Harvest Hackathon Game</h1>
 
-	{#if form?.signed}
-		<!-- redirect to /game -->
-		<!-- redirect to /game -->
-		<script>
-			import { goto } from '$app/navigation';
-			goto('/game');
-		</script>
-	{:else}
-		<p>Sign in to get started!</p>
-		<div class="box">
-			<form action="/" method="post" use:enhance>
-				<label>
-					Your name:
-					<input type="text" name="name" required />
-				</label>
-				<label>
-					Your Github Username:
-					<input type="text" name="github-username" required />
-				</label>
-				<button>I was here</button>
-			</form>
-		</div>
-	{/if}
+	<div class="field is-grouped">
+		<p class="control">
+			<button class="is-dark button is-outlined is-rounded" on:click={joinExistingGame}>
+				<span class="icon is-small">
+					<i class="fas fa-house-signal" />
+				</span>
+				<span>Join an existing game.</span>
+			</button>
+		</p>
+
+		<p class="control">
+			<button class="is-black button is-outlined is-rounded" on:click={hostGame}>
+				<span class="icon is-small">
+					<i class="fas fa-house-chimney-medical" />
+				</span>
+				<span>Host a new game.</span>
+			</button>
+		</p>
+	</div>
 </div>
 
 <style>
