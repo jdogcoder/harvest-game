@@ -1,5 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
-import { COUNTRY_HEADER, CITY_HEADER } from '$lib/constants';
+import { COUNTRY_HEADER, CITY_HEADER } from './lib/constants';
 import { dev } from '$app/environment';
 
 export const handle: Handle = async function ({ event, resolve }) {

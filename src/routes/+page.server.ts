@@ -1,5 +1,5 @@
-import { CITY_HEADER, COUNTRY_HEADER } from '$lib/constants';
-import { get_visitors, add_visitor } from '$lib/data';
+import { CITY_HEADER, COUNTRY_HEADER } from '../lib/constants';
+import { get_visitors, add_visitor } from '../lib/data';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async function ({ request }) {

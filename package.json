@@ -33,9 +33,11 @@
 		"@sveltejs/adapter-vercel": "^3.0.3",
 		"@upstash/redis": "^1.24.1",
 		"@vercel/analytics": "^1.1.1",
+		"dotenv": "^16.3.1",
 		"firebase": "^10.5.2",
 		"open-props": "^1.6.10",
 		"partysocket": "0.0.12",
-		"svelte-preprocess": "^5.0.4"
+		"svelte-preprocess": "^5.0.4",
+		"ts-node": "^10.9.1"
 	}
 }
