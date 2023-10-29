@@ -81,7 +81,11 @@
 			let rightHandX = parseInt(rightHand!.style.left.replace('px', ''));
 			let rightHandY = parseInt(rightHand!.style.top.replace('px', ''));
 
-			if (leftHandX === rightHandX && leftHandY + 1 === rightHandY) {
+
+			// console.log("left hand", leftHandX, leftHandY);
+			// console.log("right hand", rightHandX, rightHandY);
+
+			if (leftHandX === rightHandX && leftHandY === rightHandY) {
 				gameTimer += 1;
 				update(ref(db, '/'), {
 					timer: gameTimer
